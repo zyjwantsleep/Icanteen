@@ -1,39 +1,54 @@
-# Yelpcamp-clone
+# 华工国际食堂评价系统
 
-<p float="left">
-<img src="https://img.shields.io/badge/-HTML-blue">
-<img src="https://img.shields.io/badge/-CSS-blue">
-<img src="https://img.shields.io/badge/-Javascript-blue">
-<img src="https://img.shields.io/badge/-Bootstrap-blue">
-<img src="https://img.shields.io/badge/-NODE-blue">
-<img src="https://img.shields.io/badge/-Express-blue">
-<img src="https://img.shields.io/badge/-Mongo-blue">
-<img src="https://img.shields.io/badge/-PassportJS-blue">
-</p>
+面向华南理工大学国际校区 D5 / F3 / B1 食堂的多语言评价与内容发布平台。支持图文发布、置顶与时间排序浏览、用户登录注册、管理员用户管理，以及基于本地大模型的翻译服务。
 
-This is a web application where users can post sites that they visited, and write descriptions about them. Other users can then post there review about the place in the app. They can give app stars to rate them, and describe about what more could be done to make the user-experience better. The app removes the curtain between the service-providers, in the hospitality and tourism industry and the travellers who visit them. Users can also browse the places, called as campgrounds in the application to decide where they should head into in there next vacations.
+## 功能
+- 按食堂分区的主页与详情页，首启自动确保 D5/F3/B1 三个食堂存在。
+- 用户登录/注册，支持管理员角色；管理员可在 `/admin/users` 查询和删除用户。
+- 发布食堂点评：选择食堂并填写内容，可一次上传最多 9 张图片，图片统一存储在 `public/uploads`。
+- 点评展示支持置顶与时间排序；可编辑/删除自己的内容（管理员可管理全局）。
+- 多语言体验：界面语言可切换（`/languages`），点评文本可调用翻译 API 自动检测语言并翻译。
+- 独立翻译服务：基于 Python + Transformers 的本地服务，默认监听 `127.0.0.1:5001`，可通过环境变量配置。
 
-The tech stack used is:
+## 技术栈
+- Node.js + Express 5，EJS，Bootstrap，body-parser，method-override
+- MongoDB + Mongoose，Passport Local 认证
+- Multer 本地图片上传
+- Python 3 + Flask + Transformers（翻译服务）
+- concurrently 一键启动 Node 应用和翻译服务
 
-- HTML5
-- CSS3
-- EJS
-- Bootstrap-3
-- Javascript
-- NodeJS
-- Express
-- MongoDB
-- Mongoose
-- PassportJS
-- Git
+## 环境要求
+- Node.js 18+ 与 npm
+- Python 3.9+ 与 pip
+- MongoDB 实例（默认连接 `mongodb://localhost:27017/yelpcamp`）
+- 至少约 6 GB 磁盘空间用于本地翻译模型（`translation_service/model.safetensors` 已包含）
 
-The website itself is deployed on Heroku and the backend Database is deployed on MongoDB Atlas.
+## 快速开始
+1. 安装依赖  
+   ```bash
+   npm install
+   pip install -r requirements.txt
+   ```
+2. 配置环境变量（`.env` 示例）  
+   ```bash
+   DB_URL=mongodb://localhost:27017/yelpcamp
+   SECRET=ThisIsASecretKeyForSessionEncryption
+   PORT=3000
+   TRANSLATE_API_HOST=127.0.0.1   # 可选，翻译服务地址
+   TRANSLATE_API_PORT=5001        # 可选，翻译服务端口
+   ```
+3. 启动 MongoDB：`mongod`
+4. 启动翻译服务（任选其一）  
+   - `python -m translation_service.translation_api`  
+   - `python translation_service/start_translation_service.py --port 5001`
+5. 启动应用  
+   - 一键启动（并行起 Node 与翻译服务，需保证 python 可用）：`npm start`  
+   - 或仅启动 Node 应用：`node app.js`
+6. 访问 `http://localhost:3000`，注册后即可在对应食堂发布图文评价。
 
-Instructions to run the application in your local machine:
-
-- Go to the folder where you want to install the application.
-- Run the command git clone https://github.com/kartikeytewari/yelpcamp-clone.
-- Install NodeJS and MongoDB if you already do not have it.
-- In the installed folder run the command ./mongod, to start the server.
-- The run node app.js to start the application.
-- Then visit localhost:Port_id to view the app.
+## 目录速览
+- `app.js`：Express 入口，多语言中间件，默认食堂初始化。
+- `routes/`：食堂、评论、认证、翻译、管理员路由。
+- `models/`：食堂、评论、用户（含角色 user/admin）。
+- `middleware/upload.js`：本地图片上传配置，保存至 `public/uploads`。
+- `translation_service/`：Flask + Transformers 翻译 API，实现多语言自动检测与翻译。
