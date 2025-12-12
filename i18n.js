@@ -35,6 +35,7 @@ const messages = {
         indexViewDetail: "查看该食堂详情",
         d5Title: "D5 食堂",
         f3Title: "F3 食堂",
+        f5Title: "F5 食堂",
         b1Title: "B1 食堂",
 
         createdBy: "创建者",
@@ -52,6 +53,7 @@ const messages = {
         reviewPlaceholder: "请输入评价内容",
         reviewSubmit: "提交",
         backToCanteen: "返回食堂详情",
+        backToList: "返回列表",
 
         loginTitle: "用户登录",
         loginUsername: "用户名",
@@ -100,6 +102,7 @@ const messages = {
         indexViewDetail: "View details",
         d5Title: "D5 Canteen",
         f3Title: "F3 Canteen",
+        f5Title: "F5 Canteen",
         b1Title: "B1 Canteen",
 
         createdBy: "Created by",
@@ -117,6 +120,7 @@ const messages = {
         reviewPlaceholder: "Please enter your review",
         reviewSubmit: "Submit",
         backToCanteen: "Back to canteen",
+        backToList: "Back to list",
 
         loginTitle: "Login",
         loginUsername: "Username",
@@ -165,6 +169,7 @@ const messages = {
         indexViewDetail: "Xem chi tiết",
         d5Title: "Căng tin D5",
         f3Title: "Căng tin F3",
+        f5Title: "Căng tin F5",
         b1Title: "Căng tin B1",
 
         createdBy: "Tạo bởi",
@@ -182,6 +187,7 @@ const messages = {
         reviewPlaceholder: "Nhập nội dung đánh giá",
         reviewSubmit: "Gửi",
         backToCanteen: "Quay lại trang căng tin",
+        backToList: "Quay lại danh sách",
 
         loginTitle: "Đăng nhập",
         loginUsername: "Tên đăng nhập",
@@ -230,6 +236,7 @@ const messages = {
         indexViewDetail: "Voir les détails",
         d5Title: "Cantine D5",
         f3Title: "Cantine F3",
+        f5Title: "Cantine F5",
         b1Title: "Cantine B1",
 
         createdBy: "Créé par",
@@ -247,6 +254,7 @@ const messages = {
         reviewPlaceholder: "Saisissez votre avis",
         reviewSubmit: "Envoyer",
         backToCanteen: "Retour à la cantine",
+        backToList: "Retour à la liste",
 
         loginTitle: "Connexion",
         loginUsername: "Nom d'utilisateur",
@@ -295,6 +303,7 @@ const messages = {
         indexViewDetail: "Vedi dettagli",
         d5Title: "Mensa D5",
         f3Title: "Mensa F3",
+        f5Title: "Mensa F5",
         b1Title: "Mensa B1",
 
         createdBy: "Creato da",
@@ -312,6 +321,7 @@ const messages = {
         reviewPlaceholder: "Inserisci la tua recensione",
         reviewSubmit: "Invia",
         backToCanteen: "Torna alla mensa",
+        backToList: "Torna alla lista",
 
         loginTitle: "Accesso",
         loginUsername: "Nome utente",
@@ -360,6 +370,7 @@ const messages = {
         indexViewDetail: "Ver detalles",
         d5Title: "Comedor D5",
         f3Title: "Comedor F3",
+        f5Title: "Comedor F5",
         b1Title: "Comedor B1",
 
         createdBy: "Creado por",
@@ -377,6 +388,7 @@ const messages = {
         reviewPlaceholder: "Escribe tu reseña",
         reviewSubmit: "Enviar",
         backToCanteen: "Volver al comedor",
+        backToList: "Volver a la lista",
 
         loginTitle: "Iniciar sesión",
         loginUsername: "Usuario",
@@ -422,9 +434,10 @@ const messages = {
 
         indexTitle: "Wähle eine Mensa aus, um Bewertungen anzusehen oder zu schreiben (D5 / F3 / B1)",
         indexPublish: "Neue Mensabewertung schreiben",
-        indexViewDetail: "Details ansehen",
+        indexViewDetail: "Details anzeigen",
         d5Title: "Mensa D5",
         f3Title: "Mensa F3",
+        f5Title: "Mensa F5",
         b1Title: "Mensa B1",
 
         createdBy: "Erstellt von",
@@ -442,6 +455,7 @@ const messages = {
         reviewPlaceholder: "Bitte gib deine Bewertung ein",
         reviewSubmit: "Absenden",
         backToCanteen: "Zurück zur Mensa",
+        backToList: "Zurück zur Liste",
 
         loginTitle: "Anmeldung",
         loginUsername: "Benutzername",
@@ -490,6 +504,7 @@ const messages = {
         indexViewDetail: "詳細を見る",
         d5Title: "D5 食堂",
         f3Title: "F3 食堂",
+        f5Title: "F5 食堂",
         b1Title: "B1 食堂",
 
         createdBy: "作成者",
@@ -507,6 +522,7 @@ const messages = {
         reviewPlaceholder: "レビュー内容を入力してください",
         reviewSubmit: "送信",
         backToCanteen: "食堂の詳細に戻る",
+        backToList: "リストに戻る",
 
         loginTitle: "ログイン",
         loginUsername: "ユーザー名",
@@ -552,9 +568,10 @@ const messages = {
 
         indexTitle: "식당을 선택하여 평가를 확인하거나 작성하세요 (D5 / F3 / B1)",
         indexPublish: "새 식당 평가 작성",
-        indexViewDetail: "상세 보기",
+        indexViewDetail: "자세히 보기",
         d5Title: "D5 식당",
         f3Title: "F3 식당",
+        f5Title: "F5 식당",
         b1Title: "B1 식당",
 
         createdBy: "작성자",
@@ -572,6 +589,7 @@ const messages = {
         reviewPlaceholder: "평가 내용을 입력하세요",
         reviewSubmit: "등록",
         backToCanteen: "식당 상세로 돌아가기",
+        backToList: "목록으로 돌아가기",
 
         loginTitle: "로그인",
         loginUsername: "사용자 이름",
@@ -620,6 +638,7 @@ const messages = {
         indexViewDetail: "Просмотреть детали",
         d5Title: "Столовая D5",
         f3Title: "Столовая F3",
+        f5Title: "Столовая F5",
         b1Title: "Столовая B1",
 
         createdBy: "Автор",
@@ -637,6 +656,7 @@ const messages = {
         reviewPlaceholder: "Введите текст отзыва",
         reviewSubmit: "Отправить",
         backToCanteen: "Вернуться к столовой",
+        backToList: "Вернуться к списку",
 
         loginTitle: "Вход",
         loginUsername: "Имя пользователя",
@@ -685,6 +705,7 @@ const messages = {
         indexViewDetail: "عرض التفاصيل",
         d5Title: "مطعم D5",
         f3Title: "مطعم F3",
+        f5Title: "مطعم F5",
         b1Title: "مطعم B1",
 
         createdBy: "أنشأه",
@@ -702,6 +723,7 @@ const messages = {
         reviewPlaceholder: "يرجى إدخال نص التقييم",
         reviewSubmit: "إرسال",
         backToCanteen: "العودة إلى تفاصيل المطعم",
+        backToList: "العودة إلى القائمة",
 
         loginTitle: "تسجيل الدخول",
         loginUsername: "اسم المستخدم",
@@ -750,6 +772,7 @@ const messages = {
         indexViewDetail: "Ver detalhes",
         d5Title: "Refeitório D5",
         f3Title: "Refeitório F3",
+        f5Title: "Refeitório F5",
         b1Title: "Refeitório B1",
 
         createdBy: "Criado por",
@@ -767,6 +790,7 @@ const messages = {
         reviewPlaceholder: "Digite sua avaliação",
         reviewSubmit: "Enviar",
         backToCanteen: "Voltar ao refeitório",
+        backToList: "Voltar à lista",
 
         loginTitle: "Entrar",
         loginUsername: "Nome de usuário",
