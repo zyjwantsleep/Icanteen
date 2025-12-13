@@ -23,6 +23,17 @@
 - MongoDB 实例（默认连接 `mongodb://localhost:27017/yelpcamp`）
 - 至少约 6 GB 磁盘空间用于本地翻译模型（`translation_service/model.safetensors` 已包含）
 
+## 翻译模型下载与放置
+- 模型目录：	ranslation_service/，使用 acebook/m2m100_1.2B（约 4.9GB），需要至少 6GB 可用磁盘。
+- 自动下载：
+  `ash
+  cd translation_service
+  python download_model.py
+  `
+  会在当前目录生成 model.safetensors 及配套的 tokenizer/config 文件。
+- 手动下载：从 Hugging Face 获取 acebook/m2m100_1.2B 的全部文件（model.safetensors、config.json、	okenizer_config.json、sentencepiece.bpe.model、ocab.json、dded_tokens.json、special_tokens_map.json、generation_config.json），全部放入 	ranslation_service/，与 	ranslation_service.py 同级。
+- 缺失上述任意文件都会导致翻译 API 无法加载模型（返回 500），启动前请确认到位。
+
 ## 快速开始
 1. 安装依赖  
    ```bash
