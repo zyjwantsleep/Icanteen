@@ -1,0 +1,375 @@
+<%- include("../partials/header") %>
+
+<style>
+    .comment-image-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin: 8px 0;
+    }
+    .comment-image-thumb {
+        width: 110px;
+        height: 110px;
+        object-fit: cover;
+        border: 1px solid #e6e6e6;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: transform 0.15s ease, box-shadow 0.15s ease;
+    }
+    .comment-image-thumb:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .comment-image-modal {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.82);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+        padding: 24px;
+    }
+    .comment-image-modal.open { display: flex; }
+    .comment-image-modal__img {
+        max-width: 90vw;
+        max-height: 80vh;
+        border-radius: 6px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+    }
+    .comment-image-modal__close,
+    .comment-image-modal__nav {
+        position: absolute;
+        background: rgba(0,0,0,0.45);
+        color: #fff;
+        border: none;
+        width: 38px;
+        height: 38px;
+        border-radius: 19px;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.15s ease;
+    }
+    .comment-image-modal__close:hover,
+    .comment-image-modal__nav:hover {
+        background: rgba(0,0,0,0.65);
+    }
+    .comment-image-modal__close { top: 24px; right: 24px; font-size: 20px; }
+    .comment-image-modal__nav { top: 50%; margin-top: -19px; font-size: 18px; }
+    .comment-image-modal__nav.prev { left: 24px; }
+    .comment-image-modal__nav.next { right: 24px; }
+    .comment-image-modal__counter {
+        position: absolute;
+        bottom: 18px;
+        left: 50%;
+        transform: translateX(-50%);
+        color: #f5f5f5;
+        font-size: 14px;
+        letter-spacing: 0.5px;
+    }
+    .comment-text {
+        white-space: pre-line;
+        display: block;
+    }
+    .cg-description-text {
+        white-space: pre-line;
+    }
+    .cg-description-box {
+        max-height: 70vh;
+        overflow-y: auto;
+        padding-right: 6px;
+        margin-bottom: 6px;
+    }
+</style>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="thumbnail">
+                <img class="img-responsive" src="<%= campground.image %>" alt="canteen image">
+                <div class="caption">
+                    <h4 class="pull-right">￥<%=campground.price%></h4>
+                    <h4><a href="#"> <%= campground.name %> </a></h4>
+                    <div class="cg-description-box">
+                        <span class="cg-description-text"><%= campground.description %></span>
+                    </div>
+                    <p>
+                        <a href="#" class="translate-link" data-text="<%= campground.description %>" style="color:#888; margin-left:0; font-size:12px;"><%= t('translate') %></a>
+                        <span class="translated-text" style="display:none; margin-left:8px; color:#555;"></span>
+                    </p>
+                    <% if (user && (String(campground.author.id) === String(user.id) || user.role === "admin")) { %>
+                        <a class="btn btn-warning" href="/campgrounds/<%=campground.id%>/edit?lang=<%= lang %>"><%= t('editCanteen') %></a>
+                    <% } %>
+                </div>
+            </div>
+
+            <div class="well">
+                <div class="text-right">
+                    <a class="btn btn-default" href="/campgrounds?lang=<%= lang %>" style="margin-right:8px;"><%= t('backToList') %></a>
+                    <a class="btn btn-success" href="/campgrounds/<%=campground.id%>/comments/new?lang=<%= lang %>"><%= t('addReview') %></a>
+                </div>
+
+                <hr>
+                <!-- 可滚动的评论列表（支持图片 / 回复 / 置顶） -->
+                <div style="max-height: 70vh; overflow-y: auto;">
+                    <% for (let i=0;i<campground.comments.length;i++) { 
+                        var c = campground.comments[i];
+                        // 只渲染顶层评论（没有父评论）
+                        if (c.parentComment) continue;
+                    %>
+                        <div class="row" style="margin-bottom: 15px;">
+                            <div class="col-md-12">
+                                <strong>
+                                    <%= c.author.username %>
+                                    <% if (c.pinned) { %>
+                                        <span class="label label-warning" style="margin-left:6px;"><%= t('commentPin') %></span>
+                                    <% } %>
+                                </strong>
+                                <span class="pull-right">
+                                    <% if (c.createdAt) { %>
+                                        <%= c.createdAt.toLocaleString() %>
+                                    <% } %>
+                                </span>
+
+                                <% 
+                                    var commentImages = (c.images && c.images.length) ? c.images : (c.image ? [c.image] : []);
+                                %>
+                                <% if (commentImages.length) { %>
+                                    <div class="comment-image-grid" data-images='<%- JSON.stringify(commentImages) %>'>
+                                        <% commentImages.forEach(function(imgUrl, idx) { %>
+                                            <img src="<%= imgUrl %>" alt="comment image <%= idx + 1 %>" class="comment-image-thumb">
+                                        <% }); %>
+                                    </div>
+                                <% } %>
+
+                                <p>
+                                    <span class="comment-text"><%= c.text %></span>
+                                    <a href="#" class="translate-link" data-text="<%= c.text %>" style="color:#888; margin-left:8px; font-size:12px;"><%= t('translate') %></a>
+                                    <span class="translated-text" style="display:none; margin-left:8px; color:#555;"></span>
+                                </p>
+
+                                <% if (user && (String(c.author.id) === String(user.id) || user.role === "admin")) { %>
+                                    <a class="btn btn-xs btn-primary" href="/campgrounds/<%=campground.id%>/comments/<%=c.id%>/edit?lang=<%= lang %>">
+                                        <%= t('commentEdit') %>
+                                    </a>
+                                    <form action="/campgrounds/<%=campground.id%>/comments/<%=c.id%>?_method=DELETE&lang=<%= lang %>" method="POST" style="display:inline-block;">
+                                        <button class="btn btn-xs btn-danger"><%= t('commentDelete') %></button>
+                                    </form>
+                                <% } %>
+
+                                <% if (user && user.role === "admin") { %>
+                                    <form action="/campgrounds/<%=campground.id%>/comments/<%=c.id%>/pin?lang=<%= lang %>" method="POST" style="display:inline-block; margin-left:5px;">
+                                        <button class="btn btn-xs btn-warning">
+                                            <%= c.pinned ? t('commentUnpin') : t('commentPin') %>
+                                        </button>
+                                    </form>
+                                <% } %>
+
+                                <% if (user) { %>
+                                    <a class="btn btn-xs btn-success" href="/campgrounds/<%=campground.id%>/comments/<%=c.id%>/reply?lang=<%= lang %>">
+                                        <%= t('commentReply') %>
+                                    </a>
+                                <% } %>
+
+                                <!-- 渲染该评论下的所有回复 -->
+                                <div style="margin-top: 10px; margin-left: 30px; border-left: 2px solid #eee; padding-left: 10px;">
+                                    <% for (let j=0;j<campground.comments.length;j++) {
+                                        var r = campground.comments[j];
+                                        if (!r.parentComment || String(r.parentComment) !== String(c.id)) continue;
+                                    %>
+                                        <div style="margin-bottom: 10px;">
+                                            <strong><%= r.author.username %></strong>
+                                            <span class="pull-right">
+                                                <% if (r.createdAt) { %>
+                                                    <%= r.createdAt.toLocaleString() %>
+                                                <% } %>
+                                            </span>
+
+                                            <% 
+                                                var replyImages = (r.images && r.images.length) ? r.images : (r.image ? [r.image] : []);
+                                            %>
+                                            <% if (replyImages.length) { %>
+                                                <div class="comment-image-grid" data-images='<%- JSON.stringify(replyImages) %>'>
+                                                    <% replyImages.forEach(function(imgUrl, idx) { %>
+                                                        <img src="<%= imgUrl %>" alt="reply image <%= idx + 1 %>" class="comment-image-thumb">
+                                                    <% }); %>
+                                                </div>
+                                            <% } %>
+
+                                            <p>
+                                                <span class="comment-text"><%= r.text %></span>
+                                                <a href="#" class="translate-link" data-text="<%= r.text %>" style="color:#888; margin-left:8px; font-size:12px;"><%= t('translate') %></a>
+                                                <span class="translated-text" style="display:none; margin-left:8px; color:#555;"></span>
+                                            </p>
+
+                                            <% if (user && (String(r.author.id) === String(user.id) || user.role === "admin")) { %>
+                                                <a class="btn btn-xs btn-primary" href="/campgrounds/<%=campground.id%>/comments/<%=r.id%>/edit?lang=<%= lang %>">
+                                                    <%= t('commentEdit') %>
+                                                </a>
+                                                <form action="/campgrounds/<%=campground.id%>/comments/<%=r.id%>?_method=DELETE&lang=<%= lang %>" method="POST" style="display:inline-block;">
+                                                    <button class="btn btn-xs btn-danger"><%= t('commentDelete') %></button>
+                                                </form>
+                                            <% } %>
+                                        </div>
+                                    <% } %>
+                                </div>
+                            </div>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="commentImageModal" class="comment-image-modal" aria-hidden="true">
+    <button type="button" class="comment-image-modal__close" aria-label="关闭预览">&times;</button>
+    <button type="button" class="comment-image-modal__nav prev" aria-label="上一张">&#10094;</button>
+    <img class="comment-image-modal__img" src="" alt="comment image preview">
+    <div class="comment-image-modal__counter"></div>
+    <button type="button" class="comment-image-modal__nav next" aria-label="下一张">&#10095;</button>
+</div>
+
+<script>
+    (function () {
+        function postJSON(url, data) {
+            return fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(data)
+            }).then(function (res) {
+                return res.json();
+            });
+        }
+
+        var links = document.querySelectorAll(".translate-link");
+        for (var i = 0; i < links.length; i++) {
+            links[i].addEventListener("click", function (e) {
+                e.preventDefault();
+                var text = this.getAttribute("data-text") || "";
+                if (!text.trim()) {
+                    return;
+                }
+                var container = this.parentNode;
+                var translatedSpan = container.querySelector(".translated-text");
+                if (!translatedSpan) {
+                    return;
+                }
+
+                var self = this;
+                self.style.opacity = "0.6";
+
+                postJSON("/translate", {
+                    text: text,
+                    targetLang: "<%= lang %>"
+                }).then(function (res) {
+                    if (res && res.success && res.translatedText) {
+                        translatedSpan.textContent = res.translatedText;
+                        translatedSpan.style.display = "inline";
+                    } else {
+                        translatedSpan.textContent = "";
+                        translatedSpan.style.display = "none";
+                    }
+                }).catch(function () {
+                    translatedSpan.textContent = "[translation failed]";
+                    translatedSpan.style.display = "inline";
+                }).finally(function () {
+                    self.style.opacity = "1";
+                });
+            });
+        }
+
+        // 图片预览（支持多张图轮播）
+        var modal = document.getElementById("commentImageModal");
+        var modalImg = modal ? modal.querySelector(".comment-image-modal__img") : null;
+        var modalCounter = modal ? modal.querySelector(".comment-image-modal__counter") : null;
+        var btnClose = modal ? modal.querySelector(".comment-image-modal__close") : null;
+        var btnPrev = modal ? modal.querySelector(".comment-image-modal__nav.prev") : null;
+        var btnNext = modal ? modal.querySelector(".comment-image-modal__nav.next") : null;
+        var currentImages = [];
+        var currentIndex = 0;
+
+        function renderModal() {
+            if (!modal || !modalImg) return;
+            if (!currentImages.length) {
+                modal.classList.remove("open");
+                modal.setAttribute("aria-hidden", "true");
+                return;
+            }
+            currentIndex = Math.max(0, Math.min(currentIndex, currentImages.length - 1));
+            modalImg.src = currentImages[currentIndex];
+            if (modalCounter) {
+                modalCounter.textContent = (currentIndex + 1) + " / " + currentImages.length;
+            }
+            if (btnPrev) btnPrev.style.display = currentImages.length > 1 ? "inline-flex" : "none";
+            if (btnNext) btnNext.style.display = currentImages.length > 1 ? "inline-flex" : "none";
+        }
+
+        function openModal(images, startIndex) {
+            if (!modal || !modalImg || !Array.isArray(images) || !images.length) return;
+            currentImages = images.slice(0, 9); // 额外保证最多 9 张
+            currentIndex = Math.max(0, startIndex || 0);
+            modal.classList.add("open");
+            modal.setAttribute("aria-hidden", "false");
+            renderModal();
+        }
+
+        function closeModal() {
+            if (!modal) return;
+            modal.classList.remove("open");
+            modal.setAttribute("aria-hidden", "true");
+            currentImages = [];
+            currentIndex = 0;
+        }
+
+        function showOffset(offset) {
+            if (!currentImages.length) return;
+            currentIndex = (currentIndex + offset + currentImages.length) % currentImages.length;
+            renderModal();
+        }
+
+        if (modal) {
+            var thumbs = document.querySelectorAll(".comment-image-thumb");
+            for (var j = 0; j < thumbs.length; j++) {
+                thumbs[j].addEventListener("click", function () {
+                    var wrapper = this.closest("[data-images]");
+                    if (!wrapper) return;
+                    var payload = wrapper.getAttribute("data-images") || "[]";
+                    var imgs = [];
+                    try {
+                        imgs = JSON.parse(payload);
+                    } catch (e) {
+                        imgs = [];
+                    }
+                    var idx = Array.prototype.indexOf.call(wrapper.querySelectorAll(".comment-image-thumb"), this);
+                    openModal(imgs, idx);
+                });
+            }
+
+            if (btnClose) btnClose.addEventListener("click", closeModal);
+            if (btnPrev) btnPrev.addEventListener("click", function () { showOffset(-1); });
+            if (btnNext) btnNext.addEventListener("click", function () { showOffset(1); });
+            modal.addEventListener("click", function (e) {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+            document.addEventListener("keydown", function (e) {
+                if (!modal.classList.contains("open")) return;
+                if (e.key === "Escape") {
+                    closeModal();
+                } else if (e.key === "ArrowLeft") {
+                    showOffset(-1);
+                } else if (e.key === "ArrowRight") {
+                    showOffset(1);
+                }
+            });
+        }
+    })();
+</script>
+
+<%- include("../partials/footer") %>

@@ -1,0 +1,83 @@
+<%- include("../partials/header") %>
+
+<div class="container">
+    <header class="jumbotron">
+        <div class="container">
+            <div class="row">
+                <div class="col-sm-8">
+                    <h1><%= t('appTitle') %></h1>
+                    <p><%= t('indexTitle') %></p>
+                    <p>
+                        <a class="btn btn-primary btn-lg" href="/campgrounds/new?lang=<%= lang %>"><%= t('indexPublish') %></a>
+                    </p>
+                </div>
+                <div class="col-sm-4 text-center">
+                    <div class="survey-qr" role="region" aria-label="满意度调查二维码">
+                        <img src="/images/qrcode.jpg" alt="满意度调查二维码" class="survey-qr-image">
+                        <div class="survey-qr-text">扫码参与满意度调查</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <div class="row">
+        <div class="col-md-4">
+            <h3><%= t('d5Title') %></h3>
+            <hr>
+            <% for (let i=0;i<campground.length;i++) { 
+                if (campground[i].zone !== "D5") continue;
+            %>
+                <div class="thumbnail">
+                    <img src="<%= campground[i].image %>" alt="canteen image">
+                    <div class="caption">
+                        <%= campground[i].name %>
+                    </div>
+                    <p>
+                        <a class="btn btn-primary" href="/campgrounds/<%= campground[i].id %>?lang=<%= lang %>"><%= t('indexViewDetail') %></a>
+                    </p>
+                </div>
+            <% } %>
+        </div>
+
+        <div class="col-md-4">
+            <h3><%= t('f5Title') %></h3>
+            <hr>
+            <% for (let i=0;i<campground.length;i++) { 
+                if (campground[i].zone !== "F3") continue;
+            %>
+                <div class="thumbnail">
+                    <img src="<%= campground[i].image %>" alt="canteen image">
+                    <div class="caption">
+                        <%= campground[i].name %>
+                    </div>
+                    <p>
+                        <a class="btn btn-primary" href="/campgrounds/<%= campground[i].id %>?lang=<%= lang %>"><%= t('indexViewDetail') %></a>
+                    </p>
+                </div>
+            <% } %>
+        </div>
+
+        <div class="col-md-4">
+            <h3><%= t('b1Title') %></h3>
+            <hr>
+            <% for (let i=0;i<campground.length;i++) { 
+                if (campground[i].zone !== "B1") continue;
+            %>
+                <div class="thumbnail">
+                    <img src="<%= campground[i].image %>" alt="canteen image">
+                    <div class="caption">
+                        <%= campground[i].name %>
+                    </div>
+                    <p>
+                        <a class="btn btn-primary" href="/campgrounds/<%= campground[i].id %>?lang=<%= lang %>"><%= t('indexViewDetail') %></a>
+                    </p>
+                </div>
+            <% } %>
+        </div>
+    </div>
+
+</div>
+
+<%- include("../partials/footer") %>

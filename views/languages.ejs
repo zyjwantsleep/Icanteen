@@ -1,0 +1,22 @@
+<%- include("partials/header") %>
+
+<div class="container">
+    <div class="page-header">
+        <h1>选择语言</h1>
+        <p>请选择你想使用的界面语言：</p>
+    </div>
+
+    <div class="list-group">
+        <% for (var code in allLangs) { %>
+            <a class="list-group-item" href="<%= returnPath %>?lang=<%= code %>">
+                <strong><%= allLangs[code] %></strong>
+                <span style="margin-left:8px; color:#888;">(<%= code %>)</span>
+            </a>
+        <% } %>
+    </div>
+
+    <a class="btn btn-default" href="<%= returnPath %>">返回</a>
+</div>
+
+<%- include("partials/footer") %>
+
